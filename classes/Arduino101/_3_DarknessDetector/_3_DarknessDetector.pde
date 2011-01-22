@@ -1,21 +1,32 @@
 /*
-  Darkness Detector
- 
- Increases the brightness of an LED when 
- when ambient light decreases.  Uses a 
- voltage divider to measuer light with
- a photocell.
- 
- The circuit:
- * LED attached from pin 9 to ground 
- * Photocell attached to pin A0 from ground
- * 10K resistor attached to pin A0 from +5V
- 
- 
- created 2011
- by Russ Lankenau (rlankenau@workshop88.com)
- 
- This example code is in the public domain.
+    Darkness Detector
+     
+     Increases the brightness of an LED when 
+     when ambient light decreases.  Uses a 
+     voltage divider to measure light with
+     a photocell.
+     
+     The circuit:
+     * LED attached from pin 9 to ground 
+     * Photocell attached to pin A0 from ground
+     * 10K resistor attached to pin A0 from +5V
+     
+    by Russ Lankenau (rlankenau@workshop88.com)
+
+    Copyright (C) 2011  Russ Lankenau
+    
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  
  */
 
@@ -24,22 +35,38 @@
 const int sensorPin = A0;     // the number of the pushbutton pin
 const int ledPin =  9;      // the number of the LED pin
 
+/* Output intensity */
 int intensity = 0;
+
+/* 
+  Maximum value measured so far 
+  Start it low so any reading updates it.
+*/
 int max_measured = -1;
+
+/* 
+  Minimum value measured so far.
+  Start it high so any reading updates it.
+*/  
 int min_measured = 1024;
 
 void setup() {
   // initialize the LED pin as an output:
   pinMode(ledPin, OUTPUT);      
-  // initialize the pushbutton pin as an input:
+  // initialize the photocell pin as an input:
   pinMode(sensorPin, INPUT);     
 }
 
 void loop(){
-  // read the state of the pushbutton value:
+
+  /* Read the current value from the photocell. */
   int measured_value = analogRead(sensorPin);
+  
+  /* If the current reading is less than the current minimum, update the minimum. */
   if(measured_value < min_measured)
     min_measured = measured_value;
+    
+  /* If the current reading is greater than the current maximum, update the maxiumum. */
   if(measured_value > max_measured)
     max_measured = measured_value;
 
@@ -91,6 +118,8 @@ void loop(){
     
   */
   intensity = 255 * (float)(measured_value-min_measured)/(max_measured-min_measured);
+  
+  /* Set the output to the intensity we just calculated */
   analogWrite(ledPin, intensity);
 
 }
