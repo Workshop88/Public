@@ -48,12 +48,7 @@ void loop(){
     
     On each pass through the loop function, we update the min_measured and
     max_measured variables if our measured reading is outside of the range we've
-    seen so far.  This means that on every pass through, we have three variables
-    that look something like this:
-    
-    0        min     measured_value                       max        1023
-    |---------[------------*-------------------------------]-----------|
-             200          575                             900                     
+    seen so far.  
     
     Our current reading will always be in the range [min,max]. (The square brackets
     mean that our current reading can be equal to one or the other.)
@@ -62,7 +57,15 @@ void loop(){
     minimum, our output intensity is 0, and if our reading is equal to the max, our output is intensity
     is 255 (the maximum for PWM).  
     
-    To do this, we use some fancy C casting.  The way this gets evaluated is as follows:
+    All four of the variables can be visualized as follows:
+    
+                        min               measured_value             max        
+    Input      0        200                    575                   900        1023   
+               |---------[----------------------*---------------------]-----------|
+    Output               0                     136                   255 
+                                            intensity
+    
+    To do this conversion, we use some fancy C casting.  The way this gets evaluated is as follows:
     
     intensity = 255 * (float)(575 - 200)/(900-200);
     
