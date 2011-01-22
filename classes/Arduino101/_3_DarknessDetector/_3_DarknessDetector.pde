@@ -8,8 +8,8 @@
  
  The circuit:
  * LED attached from pin 9 to ground 
- * Photocell attached to pin A0 from +5V
- * 10K resistor attached to pin A0 from ground
+ * Photocell attached to pin A0 from ground
+ * 10K resistor attached to pin A0 from +5V
  
  
  created 2011
@@ -43,7 +43,51 @@ void loop(){
   if(measured_value > max_measured)
     max_measured = measured_value;
 
-  intensity = 255 - 255 * (float)(measured_value-min_measured)/(max_measured-min_measured);
+  /*
+    Explanation of the auto-detection calculation:
+    
+    On each pass through the loop function, we update the min_measured and
+    max_measured variables if our measured reading is outside of the range we've
+    seen so far.  This means that on every pass through, we have three variables
+    that look something like this:
+    
+    0        min     measured_value                       max        1023
+    |---------[------------*-------------------------------]-----------|
+             200          575                             900                     
+    
+    Our current reading will always be in the range [min,max]. (The square brackets
+    mean that our current reading can be equal to one or the other.)
+    
+    We want to set our output intensity so that when our 'measured_value' reading is equal to the
+    minimum, our output intensity is 0, and if our reading is equal to the max, our output is intensity
+    is 255 (the maximum for PWM).  
+    
+    To do this, we use some fancy C casting.  The way this gets evaluated is as follows:
+    
+    intensity = 255 * (float)(575 - 200)/(900-200);
+    
+    Step 1: Evaluate everything inside parens
+    
+    intensity = 255 * (float)375/700
+    
+    Step 2: Do the cast (we do this so that we do floating point math, instead of integer math, which just discards decimals)
+    
+    intensity = 255 * 375.0f / 700
+    
+    Step 4: Evaluate the multiplication and division in left to right order.  This is a two step-process, with two implicit type 
+            conversions.
+            
+    Step 4a: 255 is cast to a float since it is multiplied by a float.
+    
+    intensity = 95625.0f / 700 
+    
+    Step 4b: 95625.0f is cast to an integer because it is being divided by an integer.
+    
+    intensity = 136
+    
+    
+  */
+  intensity = 255 * (float)(measured_value-min_measured)/(max_measured-min_measured);
   analogWrite(ledPin, intensity);
 
 }
