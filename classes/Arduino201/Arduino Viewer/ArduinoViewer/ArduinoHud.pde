@@ -9,6 +9,13 @@ class ArduinoHud
   int w=1024,h=768;
   int box_width = 20;
   int spacing;
+  
+  int label_left = 20;
+  int graph_left = 100;
+  int analog_top = 100;
+  int chart_top = 110;
+  int analog_label_start = 640;
+  
   Arduino arduino;
   
   
@@ -34,7 +41,7 @@ class ArduinoHud
     
     fill(on);
     /* Draw the 'digital io' section */
-    text("Digital", 20, 20);
+    text("Digital", label_left, 20);
     for (int i = 0; i <= 13; i++) {
       if (arduino.digitalRead(i) == Arduino.HIGH)
         fill(on);
@@ -52,6 +59,10 @@ class ArduinoHud
       text(i, box_left, box_top-10);
     }
     
+    fill(on);
+    text("Analog", label_left, analog_top);
+    fill(off);
+    rect(100, chart_top, width-200, analog_label_start-chart_top);
     
   }
 }
