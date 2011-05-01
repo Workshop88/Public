@@ -38,7 +38,7 @@ int wee_terminal_attr_init(wee_terminal_attr_t *attr)
 	return 0;
 }
 
-int wee_terminal_attr_create(wee_terminal_attr_t *attrp)
+int wee_terminal_attr_create(wee_terminal_attr_t **attrp)
 {
 	wee_terminal_attr_t *attr;
 
@@ -49,6 +49,7 @@ int wee_terminal_attr_create(wee_terminal_attr_t *attrp)
 	if(attr == NULL)
 		return WEE_ENOMEM;
 
+	*attrp = attr;
 	return 0;
 }
 
@@ -91,6 +92,8 @@ int wee_terminal_create(wee_terminal_t **termp, wee_terminal_attr_t *attr)
 	term->start = 0;
 	term->end = 0;
 	term->write_pos = 0;
+
+	*termp = term;
 	return 0;
 }
 
@@ -124,7 +127,7 @@ int	wee_terminal_print(wee_terminal_t *term, char *str)
 		return WEE_EINVAL;
 
 	/* Have to copy byte by byte to scan for \n */
-	for(;str;str++)
+	for(;*str;str++)
 	{
 		/* Is this an actual newline? */
 		if(*str == '\n')
