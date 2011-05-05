@@ -4,7 +4,7 @@
   Plugin URI: http://www.workshop88.com/membersites/
   Description: Provides membership info for W88 members.
   Version: 1.0
-  Author: Russ Lankenau
+  Author: Russ Lankenau & Jay Margalus
   Author URI: http://www.lunargiantstudios.com
   License: GPL2
 */
