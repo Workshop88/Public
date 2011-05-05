@@ -10,6 +10,8 @@
 */
 
 
+global $wpdb;
+
 function membersites_doinit() {
    add_action('admin_menu', 'membersites_membership_panel');
    add_action('show_user_profile', 'membersites_display_user_data');
@@ -22,11 +24,12 @@ function membersites_activate() {
 	$tablename= $wpdb->prefix . "membership_payments";
 	if($wpdb->get_var("show tables like '$tablename'") != $tablename)
 	{
-		$sql = "CREATE TABLE " . $tablename ." (
-			id mediumint(9) NOT NULL AUTO_INCREMENT,
-			uid mediumint(9) NOT NULL,
-			amt int,
-			when bigint(11)
+		$sql = "CREATE TABLE `" . $tablename . "` (
+			`id` mediumint(9) NOT NULL AUTO_INCREMENT,
+			`uid` mediumint(9) NOT NULL,
+			`amt` int NOT NULL,
+			`when` bigint(11) NOT NULL,
+			UNIQUE KEY id (id)
 			);";
 
 
