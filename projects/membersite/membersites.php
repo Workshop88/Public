@@ -4,11 +4,13 @@
   Plugin URI: http://www.workshop88.com/membersites/
   Description: Provides membership info for W88 members.
   Version: 1.0
-  Author: Russ Lankenau
+  Author: Russ Lankenau & Jay Margalus
   Author URI: http://www.lunargiantstudios.com
   License: GPL2
 */
 
+
+global $wpdb;
 
 function membersites_doinit() {
    add_action('admin_menu', 'membersites_membership_panel');
@@ -22,11 +24,12 @@ function membersites_activate() {
 	$tablename= $wpdb->prefix . "membership_payments";
 	if($wpdb->get_var("show tables like '$tablename'") != $tablename)
 	{
-		$sql = "CREATE TABLE " . $tablename ." (
-			id mediumint(9) NOT NULL AUTO_INCREMENT,
-			uid mediumint(9) NOT NULL,
-			amt int,
-			when bigint(11)
+		$sql = "CREATE TABLE `" . $tablename . "` (
+			`id` mediumint(9) NOT NULL AUTO_INCREMENT,
+			`uid` mediumint(9) NOT NULL,
+			`amt` int NOT NULL,
+			`when` bigint(11) NOT NULL,
+			UNIQUE KEY id (id)
 			);";
 
 

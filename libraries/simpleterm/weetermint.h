@@ -44,7 +44,7 @@ typedef struct wee_terminal_t_stct {
 	int start;
 	/* The end of the display buffer */
 	int end;
-} wee_terminal_t;
+};
 
 int wee_terminal_set_defaults(wee_terminal_t *term);
 
