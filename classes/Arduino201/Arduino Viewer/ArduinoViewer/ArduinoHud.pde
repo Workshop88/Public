@@ -17,6 +17,10 @@ class ArduinoHud
   int chart_top = 170;
   int analog_label_start = 640;
   int a_spacing;
+  int a_pos = 0;
+  int graph_width=800;
+  int init_finished = 0;
+  int symbol_interval = 100;
   
   Arduino arduino;
   
@@ -37,10 +41,20 @@ class ArduinoHud
   
   void draw()
   {
+    
     int box_left, box_top;
-  
-    background(off);
+
     stroke(on);
+    fill(off); 
+    if(init_finished == 0)
+    {
+      background(off);
+      
+      rect(79, chart_top-20, graph_width+42, analog_label_start-chart_top+40);
+      init_finished=1;
+    }
+  
+
     
     fill(on);
     /* Draw the 'digital io' section */
@@ -65,19 +79,33 @@ class ArduinoHud
     fill(on);
     text("Analog", label_left, analog_top);
     fill(off);
-    rect(100, chart_top, width-200, analog_label_start-chart_top);
+    stroke(off);
+    if(a_pos == 0)
+      rect(100+a_pos-20, chart_top-10, 40, analog_label_start-chart_top+20);
+    else 
+      rect(100+a_pos, chart_top-10, 20, analog_label_start-chart_top+20);
     fill(on);
-    text("1024", 55, chart_top+8);
-    text("0", 85, analog_label_start+5);
+    stroke(on);
+    text("1024", 35, chart_top+8);
+    text("0", 65, analog_label_start+5);
     for(int i=0;i<6;i++)
     {
+       /* Draw the position. The reading is 1024 - the value because it is easier than flipping the graph Y axis.*/
+       int reading = 1024 - arduino.analogRead(i);
+       fill(on);
+       point(100+a_pos, chart_top + reading*(analog_label_start-chart_top)/1024);
+       if(a_pos%symbol_interval == 0)
+       {
+         draw_analog_symbol(i, 100+a_pos - box_width/2, chart_top + reading*(analog_label_start-chart_top)/1024, box_width/2);         
+       }
+      
        box_left = (((i+1) * box_width + (i)*a_spacing) + a_spacing/2 - box_width/2);
        box_top = analog_label_start + 30;
-       draw_analog_symbol(i, box_left, analog_label_start + 30, box_width);
+       draw_analog_symbol(i, box_left, analog_label_start + 35, box_width);
        fill(on);
-       text("A" + i, box_left - box_width/2, box_top + box_width+10);
+       text("A" + i, box_left - box_width/2, box_top + box_width+15);
     }
-    
+    a_pos = (a_pos+1) % graph_width;
   }
   
   void draw_analog_symbol(int i, int x, int y, int sz)
