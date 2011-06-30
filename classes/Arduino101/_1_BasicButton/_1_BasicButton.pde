@@ -38,7 +38,7 @@ void setup() {
 
 void loop(){
   // read the state of the pushbutton value:
-  buttonState = digitalRead(buttonPin);
+  int buttonState = digitalRead(buttonPin);
 
   // check if the pushbutton is pressed.
   // if it is, the buttonState is HIGH:
